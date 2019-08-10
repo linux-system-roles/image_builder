@@ -1,0 +1,12 @@
+
+__ib_repo: rhel-7-server-extras-rpms
+
+__ib_daemon: lorax-composer
+
+__ib_packages:
+  - lorax-composer
+  - composer-cli
+
+__ib_gui_packages:
+  - cockpit-composer
+

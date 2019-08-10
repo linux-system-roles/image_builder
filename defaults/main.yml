@@ -1,3 +1,10 @@
 ---
-# defaults file for template
-this_subsystem_provider: "{{ some_default_service_or_toolset }}"
+# defaults file for image_builder
+
+# RHEL only. Set a repository to use for Image Builder installation.
+ib_enablerepo: ""
+
+ib_packages: ""
+ib_with_gui: false
+
+
