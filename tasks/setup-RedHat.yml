@@ -1,0 +1,8 @@
+---
+- name: Ensure Image Builder packages are installed.
+  package:
+    name: "{{ ib_packages }}"
+    state: present
+    enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
+
+

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  remote_user: root
+  vars:
+    - ib_with_gui: true
+
+  roles:
+    - image_builder 
+

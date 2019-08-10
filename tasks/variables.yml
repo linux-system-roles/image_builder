@@ -1,0 +1,48 @@
+---
+# Variable configuration.
+ 
+- name: Include OS-specific variables (RedHat & Fedora).
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_os_family == 'RedHat'
+
+- name: Define ib_daemon.
+  set_fact:
+    ib_daemon: "{{ __ib_daemon }}"
+  when: ib_daemon is not defined
+
+- debug:
+    msg: "{{ ib_with_gui }}"
+
+- name: Define ib_packages for core and GUI.
+  set_fact:
+    ib_packages: "{{ __ib_packages + __ib_gui_packages }}"
+  when: ib_with_gui == true
+
+- name: Define core ib_packages.
+  set_fact:
+    ib_packages: "{{ __ib_packages | list }}"
+  when: ib_with_gui == false
+
+
+
+# ansible fedora -c local -m setup | grep -ie ansible_os -e distribution
+#         "ansible_distribution": "Fedora",
+#         "ansible_distribution_file_parsed": true,
+#         "ansible_distribution_file_path": "/etc/redhat-release",
+#         "ansible_distribution_file_variety": "RedHat",
+#         "ansible_distribution_major_version": "30",
+#         "ansible_distribution_release": "",
+#         "ansible_distribution_version": "30",
+#         "ansible_os_family": "RedHat",
+
+# ansible localhost -c local -m setup | grep -ie ansible_os -e distribution
+#         "ansible_distribution": "RedHat",
+#         "ansible_distribution_file_parsed": true,
+#         "ansible_distribution_file_path": "/etc/redhat-release",
+#         "ansible_distribution_file_search_string": "Red Hat",
+#         "ansible_distribution_file_variety": "RedHat",
+#         "ansible_distribution_major_version": "8",
+#         "ansible_distribution_release": "Ootpa",
+#         "ansible_distribution_version": "8.0",
+#         "ansible_os_family": "RedHat",
+
