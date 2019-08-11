@@ -12,11 +12,11 @@ galaxy_info:
     versions:
     - 7
     - 8
-  galaxy_tags: 
+  galaxy_tags:
     - rhel
     - redhat
     - fedora
     - centos
-    - image_builder
+    - imagebuilder
     - cockpit
-dependencies: [] 
+dependencies: []

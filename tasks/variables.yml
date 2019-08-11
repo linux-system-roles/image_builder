@@ -15,12 +15,12 @@
 - name: Define ib_packages for core and GUI.
   set_fact:
     ib_packages: "{{ __ib_packages + __ib_gui_packages }}"
-  when: ib_with_gui == true
+  when: ib_with_gui
 
 - name: Define core ib_packages.
   set_fact:
     ib_packages: "{{ __ib_packages | list }}"
-  when: ib_with_gui == false
+  when: not ib_with_gui
 #
 # ansible fedora -c local -m setup | grep -ie ansible_os -e distribution
 #         "ansible_distribution": "Fedora",

@@ -12,7 +12,7 @@
     name: "{{ ib_daemon }}"
     state: started
     enabled: yes
-  when: ib_with_gui == true
+  when: ib_with_gui
 
 - name: Ensure Image Builder service "{{ ib_daemon }}" is started and enabled on boot.
   service:
