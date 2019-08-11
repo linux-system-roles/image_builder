@@ -1,10 +1,6 @@
 ---
 # defaults file for image_builder
-
 # RHEL only. Set a repository to use for Image Builder installation.
 ib_enablerepo: ""
-
 ib_packages: ""
 ib_with_gui: false
-
-

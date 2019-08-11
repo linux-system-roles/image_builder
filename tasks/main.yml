@@ -1,6 +1,5 @@
 ---
 # tasks file for image_builder
-
 # Variable configuration.
 - include_tasks: variables.yml
 
@@ -20,5 +19,3 @@
     name: "{{ ib_daemon }}"
     state: started
     enabled: yes
-
-

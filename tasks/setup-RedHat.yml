@@ -4,5 +4,3 @@
     name: "{{ ib_packages }}"
     state: present
     enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
-
-

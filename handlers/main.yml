@@ -1,9 +1,7 @@
 ---
 # handlers file for image_builder
-
 - name: restart "{{ ib_daemon }}"
   service:
     name: "{{ ib_daemon }}"
     state: "restarted"
     sleep: 3
-
