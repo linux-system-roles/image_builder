@@ -1,21 +1,46 @@
 ---
 # tasks file for image_builder
-# Variable configuration.
-- include_tasks: variables.yml
 
-# Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- name: Ensure core Image Builder packages are installed
+  package:
+    name: "{{ ib_core_packages }}"
+    state: present
+    enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
 
-- name: Ensure Cockpit Web Console is started/enabled when GUI is chosen.
+- name: Ensure core Image Builder GUI packages are installed
+  package:
+    name: "{{ ib_core_gui_packages }}"
+    state: present
+    enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
+  when: ib_with_gui
+
+- name: Ensure Cockpit Web Console is enabled and started when GUI is chosen
   service:
-    name: "{{ ib_daemon }}"
+    name: "{{ ib_cockpit_service }}"
     state: started
     enabled: yes
   when: ib_with_gui
 
-- name: Ensure Image Builder service "{{ ib_daemon }}" is started and enabled on boot.
+- name: Ensure additional Cockpit Web Console packages are installed
+  package:
+    name: "{{ ib_gui_packages }}"
+    state: present
+    enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
+  notify: restart cockpit
+  when:
+    - ib_with_gui
+    - ib_gui_packages | length > 0
+
+- name: Ensure Image Builder service is started and enabled on boot
   service:
-    name: "{{ ib_daemon }}"
+    name: "{{ ib_service }}"
     state: started
     enabled: yes
+
+- name: Ensure additional Image Builder packages are installed
+  package:
+    name: "{{ ib_packages }}"
+    state: present
+    enablerepo: "{{ ib_enablerepo | default(omit, true) }}"
+  notify: restart image builder
+  when: ib_packages | length > 0

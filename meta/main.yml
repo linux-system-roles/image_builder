@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Terry Bowling <tbowling@redhat.com>
   description: Install and enable Image Builder for building OS images
@@ -5,13 +6,13 @@ galaxy_info:
   license: GPLv3
   min_ansible_version: 2.5
   platforms:
-  - name: Fedora
-    versions:
-    - 30
-  - name: EL
-    versions:
-    - 7
-    - 8
+    - name: Fedora
+      versions:
+        - 30
+    - name: EL
+      versions:
+        - 7
+        - 8
   galaxy_tags:
     - rhel
     - redhat

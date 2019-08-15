@@ -1,6 +1,35 @@
 ---
 # defaults file for image_builder
-# RHEL only. Set a repository to use for Image Builder installation.
-ib_enablerepo: ""
-ib_packages: ""
+
+# List of packages to be installed additionally besides Image Builder core
+# packages:
+ib_packages: []
+
+# List of packages to be installed additionally besides Image Builder core GUI
+# packages (if GUI is enabled, see `ib_with_gui`):
+ib_gui_packages: []
+
+# Set to true if it is desired to have also GUI (provided by Cockpit Web
+# Console) for Image Builder installed:
 ib_with_gui: false
+
+# Name of repository to be enabled for Image Builder installation.
+# Default values are:
+#
+#   "fedora <Fedora version number> - <architecture>" for Fedora
+#   "rhel-7-server-extras-rpms" for Red Hat Enterprise Linux 7
+#   "rhel-8-for-<architecture>-appstream-rpms" for Red Hat Enterprise Linux 8
+#   "" for other Linux distributions
+#
+# To disable this feature, use "" (empty string) as a repository name.
+# This feature takes effect only on system with yum based packaging:
+ib_enablerepo: "{{ ib_enablerepo_default }}"
+
+# Name of the Image Builder service:
+ib_service: lorax-composer
+
+# Name of the Cockpit service:
+ib_cockpit_service: cockpit
+
+# Number of seconds between Image Builder service stop and start:
+ib_restart_delay: 3

@@ -1,7 +1,7 @@
 ---
-- hosts: all
-  remote_user: root
-  vars:
-    - ib_with_gui: true
+
+- name: Ensure that the role runs with default parameters
+  hosts: all
+
   roles:
-    - image_builder 
+    - linux-system-roles.image_builder

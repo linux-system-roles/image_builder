@@ -1,7 +1,14 @@
 ---
 # handlers file for image_builder
-- name: restart "{{ ib_daemon }}"
+
+- name: restart cockpit
   service:
-    name: "{{ ib_daemon }}"
-    state: "restarted"
-    sleep: 3
+    name: "{{ ib_cockpit_service }}"
+    state: restarted
+    sleep: "{{ ib_restart_delay }}"
+
+- name: restart image builder
+  service:
+    name: "{{ ib_service }}"
+    state: restarted
+    sleep: "{{ ib_restart_delay }}"

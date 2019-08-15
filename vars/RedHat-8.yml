@@ -1,8 +1,0 @@
----
-__ib_repo: rhel-8-for-{{ ansible_architecture }}-appstream-rpms
-__ib_daemon: lorax-composer
-__ib_packages:
-  - lorax-composer
-  - composer-cli
-__ib_gui_packages:
-  - cockpit-composer
