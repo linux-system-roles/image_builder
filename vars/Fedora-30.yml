@@ -1,8 +1,0 @@
----
-__ib_repo: "fedora {{ ansible_distribution_major_version }} - {{ ansible_architecture }}"
-__ib_daemon: lorax-composer
-__ib_packages:
-  - lorax-composer
-  - composer-cli
-__ib_gui_packages:
-  - cockpit-composer

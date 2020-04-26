@@ -1,0 +1,8 @@
+- name: Ensure Image Builder packages are installed.
+  yum:
+    name: "{{ __ib_packages[ib_packages]
+              if ib_packages in __ib_package_types
+              else ib_packages }}"
+    exclude: "{{ __ib_packages_exclude }}"
+    state: present
+

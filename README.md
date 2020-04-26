@@ -1,46 +1,93 @@
 # Role Name
+Installs and configures Image Builder as a build node for creating Fedora and Red Hat Enterprise Linux OS images. Note, these are not container images, but rather complete OS images that could be deployed in cloud, virtual, and bare metal environments.
 
-Installs and configures Image Builder as a build node for creating OS images.
+Image Builder consists of multiple components:
 
 ## Requirements
-
-If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role does not allow handling of that yet.
+1. RHEL/CentOS 7.x depend on the Extras repository being enabled.
+2. If running this against the local node, RHEL/CentOS will need the Ansible repo enabled.
+3. Optional considerations include:
+    - using linux-system-roles.storage to prep a dedicated filesystem for storing the image artifacts.
+    - using linux-system-roles.firewall to make the Web Console available remotely.
 
 ## Role Variables
-
-By default, the core packages for the Image Builder CLI and build service will be installed (see 'vars/<distro>.yml`):
-  - lorax-composer
-  - composer-cli
-
+By default, the core packages for the Image Builder CLI and build service will be installed:
 ```yaml
-ib_with_gui: **false** | true
-  - cockpit-composer	## Beautiful graphical interface via Cockpit Web Console
+  vars:
+    ib_packages: [default, minimal, full]
+    ib_daemon: [lorax-composer, osbuild-composer]
 ```
-
-[To Do] Specify the repository to enable in case non-standard repository mirror names are used.
-This has yet to be implemented, though the variable exists but not used.
-
-```yaml
-ib_enablerepo: "rhel-7-server-extras-rpms"  
-```
-
-## Dependencies
-
-1. RHEL/CentOS 7.x depend on the Extras repository being enabled.
-2. Other considerations include
-    - using linux-system-roles.storage to prep a dedicated filesystem for build space
-    - using linux-system-roles.firewall to make the Web Console available remotely
+  - minimal (CLI plus one or the other backend engine, not both)
+    - lorax-composer	# backend build engine and API, based on lorax from the classic Anaconda installer
+    - osbuild-composer	# nextgen backend engine and API
+    - composer-cli	# a command line interface
+  - default (include GUI from Cockpit)
+    - cockpit-composer	# a graphical front end within the Cockpit Web Console
+  - full (same as default today, may change in the future)
+    - cockpit-composer	# a graphical front end within the Cockpit Web Console
 
 ## Example Playbook
-
 ```yaml
 - hosts: fedora, rhel7, rhel8
   become: yes
-  roles:
-    - linux-system-roles.image_builder
+
+# Assumes you are using RHEL System Roles
+#   yum install --enablerepo=rhel-7-server-ansible-2-rpms rhel-system-roles ansible
+#
+# Assumes roles from galaxy
+#   ansible-galaxy install linux-system-roles.storage
+#   ansible-galaxy install linux-system-roles.firewall
+#   ansible-galaxy install linux-system-roles.cockpit
+
+  vars:
+    USE_FIREWALL: 1
+    CONFIG_STORAGE: 0
+
+  tasks:
+    # Optional example to configure a second disk for your node to contain
+    # the OS image artifacts created.  Typical minimal images are ~ 2 GB each.
+    # Another option is to simply link to a NAS share.
+    - name: Configure storage for Image Builder
+      include_role:
+        name: linux-system-roles.storage
+      vars:
+        use_partitions: false
+        storage_pools:
+          - name: image_builder
+            disks: ['']  # something like vdb
+            # type: lvm
+            state: present
+            volumes:
+              - name: composer
+                size: "20G"     # estimate depending on how many images are created
+                # type: lvm
+                # fs_type: xfs
+                fs_label: "imgbldr"
+                mount_point: '/var/lib/lorax/composer'
+      when: CONFIG_STORAGE
+
+  # Optionally use the Cockpit role to install the full suite,
+  # else the Image Builder role will install the minimal dependencies for GUI.
+  - name: Install and enable RHEL/Fedora Web Console (Cockpit) service
+    include_role:
+      name: linux-system-roles.cockpit
+    vars:
+      cockpit_packages: "full"   # or "minimal" or "default"
+
+  - name: Install and enable RHEL/Fedora Image Builder service
+    include_role:
+      name: linux-system-roles.image_builder
+    vars:
+      ib_packages: "full"   # or "minimal" or "default"
+
+  - name: Configure Firewall for Web Console
+    include_role:
+      name: linux-system-roles.firewall
+    vars:
+      firewall:
+        service: cockpit
+        state: enabled
+    when: USE_FIREWALL
 ```
-
 ## License
-
 GPLv3
-

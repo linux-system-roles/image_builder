@@ -1,4 +1,8 @@
-__ib_daemon: '{{ "osbuild-composer" if (ansible_distribution_version >= "8.3") | bool else "lorax-composer" }}'
+#when rhel 7, rhel <= 8.1, fedora <= 31
+__ib_daemon: lorax-composer
+
+#fedora >= 32, rhel >= 8.3
+#__ib_daemon: osbuild-composer
 
 __ib_packages_minimal:
   - composer-cli
@@ -15,4 +19,3 @@ __ib_packages:
   default: "{{ __ib_packages_minimal + __ib_packages_default }}"
   full: "{{ __ib_packages_minimal + __ib_packages_default + __ib_packages_full }}"
 
-__ib_packages_exclude: '{{ "lorax-composer" if (ansible_distribution_version >= "8.3") | bool else "osbuild-composer" }}'

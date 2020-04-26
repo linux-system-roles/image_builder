@@ -1,21 +1,33 @@
----
-# tasks file for image_builder
-# Variable configuration.
-- include_tasks: variables.yml
+- name: Set version specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
 
-# Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- name: Manage Image Builder packages using platform specific package manager if applicable
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "setup-{{ ansible_pkg_mgr }}.yml"
+    - "setup-default.yml"
 
-- name: Ensure Cockpit Web Console is started/enabled when GUI is chosen.
-  service:
-    name: "{{ ib_daemon }}"
-    state: started
-    enabled: yes
-  when: ib_with_gui
+- name: Define daemon "{{ __ib_daemon }}" for backend engine builder and api.
+  set_fact:
+    ib_daemon: "{{ __ib_daemon }}"
+  when: ib_daemon is not defined
 
 - name: Ensure Image Builder service "{{ ib_daemon }}" is started and enabled on boot.
   service:
     name: "{{ ib_daemon }}"
     state: started
     enabled: yes
+
+- name: Ensure Cockpit Web Console is started/enabled when GUI is chosen.
+  service:
+    name: "cockpit.socket"
+    state: started
+    enabled: yes
+  when: ib_packages == "default" or ib_packages == "full"
+
