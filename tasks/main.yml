@@ -24,7 +24,7 @@
     state: started
     enabled: yes
 
-- name: Ensure Cockpit Web Console is started/enabled when GUI is chosen.
+- name: Ensure Cockpit Web Console is started/enabled when GUI is chosen (default or full).
   service:
     name: "cockpit.socket"
     state: started

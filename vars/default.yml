@@ -1,8 +1,5 @@
-#when rhel 7, rhel <= 8.1, fedora <= 31
-__ib_daemon: lorax-composer
-
-#fedora >= 32, rhel >= 8.3
-#__ib_daemon: osbuild-composer
+---
+__ib_daemon: osbuild-composer
 
 __ib_packages_minimal:
   - composer-cli

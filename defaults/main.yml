@@ -1,14 +1,14 @@
 ---
 # defaults file for image_builder
-# nothing define here, this is documentation index only
-
-# internal vars
-# __ib_daemon: 
-# __ib_packages           set in vars/*
-# __ib_packages_exclude   set in vars/*
-
 
 # public vars if user defined, else defaults from internal vars
 ib_packages: default
-# ib_daemon
-# ib_with_gui   deprecate in favor of the package lists
+
+# internal vars
+__ib_daemon: osbuild-composer
+
+# __ib_packages: default
+# __ib_packages_exclude    set in vars/*
+# __ib_packages_default    set in vars/*
+# __ib_packages_full       set in vars/*
+# __ib_packages_minimal    set in vars/*
