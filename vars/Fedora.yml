@@ -1,4 +1,5 @@
-__ib_daemon: '{{ "osbuild-composer" if (ansible_distribution_version >= "32") | bool else "lorax-composer" }}'
+__ib_daemon: '{{ "osbuild-composer" if (ansible_distribution_version >= "32") and (ib_daemon is not defined) | bool else "lorax-composer" }}'
+#__ib_daemon: '{{ ib_daemon if (ib_daemon is defined) }}'
 
 __ib_packages_minimal:
   - composer-cli

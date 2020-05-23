@@ -1,12 +1,12 @@
 # Role Name
 Installs and configures Image Builder as a build node for creating Fedora and Red Hat Enterprise Linux OS images. Note, these are not container images, but rather complete OS images that could be deployed in cloud, virtual, and bare metal environments.
 
-Image Builder consists of multiple components:
 
 ## Requirements
 1. RHEL/CentOS 7.x depend on the Extras repository being enabled.
 2. If running this against the local node, RHEL/CentOS will need the Ansible repo enabled.
-3. Optional considerations include:
+3. Relies on linux-system-roles.cockpit to setup dependencies for the graphical frontend interface.
+4. Optional considerations include:
     - using linux-system-roles.storage to prep a dedicated filesystem for storing the image artifacts.
     - using linux-system-roles.firewall to make the Web Console available remotely.
 
@@ -26,7 +26,17 @@ By default, the core packages for the Image Builder CLI and build service will b
   - full (same as default today, may change in the future)
     - cockpit-composer	# a graphical front end within the Cockpit Web Console
 
-## Example Playbook
+## Example Playbooks
+The most simple example.
+```yaml
+---
+- hosts: fedora, rhel7, rhel8
+  become: yes
+  roles:
+    - linux-system-roles.image_builder
+```
+
+A more advanced example which can configure optional storage and firewall.
 ```yaml
 - hosts: fedora, rhel7, rhel8
   become: yes
