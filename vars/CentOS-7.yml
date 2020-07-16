@@ -16,4 +16,4 @@ __ib_packages:
   default: "{{ __ib_packages_minimal + __ib_packages_default }}"
   full: "{{ __ib_packages_minimal + __ib_packages_default + __ib_packages_full }}"
 
-__ib_packages_exclude: 
+__ib_packages_exclude: ''
